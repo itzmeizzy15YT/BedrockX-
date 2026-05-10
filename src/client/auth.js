@@ -1,8 +1,8 @@
-const { Authflow: PrismarineAuth } = require('prismarine-auth')
+const { Authflow } = require('prismarine-auth')
 
 async function authenticate(client, options) {
   try {
-    options.authflow ??= new PrismarineAuth(options.username, options.profilesFolder, options, options.onMsaCode)
+    options.authflow ??= new Authflow(options.username, options.profilesFolder, options, options.onMsaCode)
 
     const MCTOKEN = (await options.authflow.getMinecraftBedrockServicesToken({ version: client.options.version })).mcToken
     const body = JSON.stringify({ publicKey: client.clientX509 })
@@ -31,7 +31,10 @@ async function authenticate(client, options) {
     }
 
     const signedToken = result.result.signedToken
-   
+
+    const [h, payload] = signedToken.split('.').map(k => Buffer.from(k, 'base64'))
+    
+    client.tokenData = JSON.parse(String(payload))
     client.token = signedToken
     client.emit('session')
   } catch (err) {

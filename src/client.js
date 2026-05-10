@@ -7,6 +7,8 @@ const { authenticate } = require('./client/auth')
 const JWT = require('jsonwebtoken')
 const crypto = require('crypto')
 
+const steve = require("./skins/steve.json");
+
 const { v3, v4, NIL } = require('uuid')
 
 const pem = { format: 'pem', type: 'sec1' }
@@ -102,8 +104,16 @@ class Client extends Connection {
             GraphicsMode: 1,
             TrustedSkin: true,
             OverrideSkin: false,
+            ...steve,
             ...this.options.skinData
         }
+
+        const PlayFabId = this.tokenData.mid.toLowerCase() || "";
+
+        const updPFID = (data) => btoa(atob(data).replaceAll(`aed7e8a4d485a49a-5`, `${PlayFabId}-5`));    
+        payload.SkinId = `persona-${PlayFabId || ""}-5`;
+        payload.SkinGeometryData = updPFID(payload.SkinGeometryData);
+        payload.SkinResourcePatch = updPFID(payload.SkinResourcePatch);
 
         this.write('login', {
             protocol_version: this.options.protocolVersion,
