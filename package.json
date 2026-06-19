@@ -12,8 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "@jsprismarine/jsbinaryutils": "^5.5.3",
-    "@roamhq/wrtc": "^0.9.1",
-    "jose": "^6.2.3",
+    "@roamhq/wrtc": "0.8.0",
     "json-bigint": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "minecraft-data": "^3.103.0",
